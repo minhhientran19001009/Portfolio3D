@@ -32,7 +32,7 @@ import {
   loadFiles,
 } from "utils/functions";
 
-const { alias, author, license } = PACKAGE_DATA;
+const { alias, license } = PACKAGE_DATA;
 
 export const displayLicense = `${license} License`;
 
@@ -161,14 +161,13 @@ const useTerminal = ({
   }, [localEcho, terminal]);
 
   useEffect(() => {
-    if (localEcho && terminal && !prompted) {
+    if (localEcho && terminal && typeof readdir === "function" && !prompted) {
       const prompt = (): Promise<void> =>
         localEcho
           .read(`\r\n${cd.current}${PROMPT_CHARACTER}`)
           .then((command) => processCommand.current?.(command).then(prompt));
 
       localEcho.println(`${alias} [Version ${displayVersion()}]`);
-      localEcho.println(`By ${author.name}. ${displayLicense}.`);
 
       if (initialCommand) {
         localEcho.println(

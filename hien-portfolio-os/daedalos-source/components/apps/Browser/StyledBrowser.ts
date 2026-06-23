@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 type StyledBrowserProps = {
+  $hasBookmarks: boolean;
   $hasSrcDoc: boolean;
 };
 
@@ -8,7 +9,9 @@ const StyledBrowser = styled.div<StyledBrowserProps>`
   iframe {
     background-color: ${({ $hasSrcDoc }) => ($hasSrcDoc ? "#fff" : "initial")};
     border: 0;
-    height: calc(100% - 42px - 37px);
+    height: calc(
+      100% - 42px${({ $hasBookmarks }) => ($hasBookmarks ? " - 37px" : "")}
+    );
     width: 100%;
   }
 

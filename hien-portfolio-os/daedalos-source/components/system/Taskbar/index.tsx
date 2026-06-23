@@ -13,6 +13,7 @@ import SearchButton from "components/system/Taskbar/Search/SearchButton";
 import StartButton from "components/system/Taskbar/StartButton";
 import StyledTaskbar from "components/system/Taskbar/StyledTaskbar";
 import TaskbarEntries from "components/system/Taskbar/TaskbarEntries";
+import UniKeyTray from "components/system/Taskbar/UniKeyTray";
 import useTaskbarContextMenu from "components/system/Taskbar/useTaskbarContextMenu";
 import { CLOCK_CANVAS_BASE_WIDTH, FOCUSABLE_ELEMENT } from "utils/constants";
 import { useWindowAI } from "hooks/useWindowAI";
@@ -75,7 +76,8 @@ const Taskbar: FC = () => {
           searchVisible={searchVisible}
           toggleSearch={toggleSearch}
         />
-        <TaskbarEntries clockWidth={clockWidth} hasAI={hasAI} />
+        <TaskbarEntries clockWidth={clockWidth + 24} hasAI={hasAI} />
+        <UniKeyTray clockWidth={clockWidth} hasAI={hasAI} />
         <Clock
           hasAI={hasAI}
           setClockWidth={setClockWidth}

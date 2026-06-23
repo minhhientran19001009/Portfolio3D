@@ -33,7 +33,21 @@ export class ErrorBoundary extends Component<
     } = this;
 
     if (hasError && !FallbackRender && !isDev()) {
-      window.location.reload();
+      try {
+        const reloadKey = "error_boundary_reload_attempts";
+        const lastReload = sessionStorage.getItem(reloadKey);
+        const now = Date.now();
+        if (!lastReload || now - Number(lastReload) > 10000) {
+          sessionStorage.setItem(reloadKey, String(now));
+          window.location.reload();
+        } else {
+          console.error(
+            "ErrorBoundary: Reloaded recently. Preventing infinite loop."
+          );
+        }
+      } catch {
+        console.error("ErrorBoundary: Session storage error");
+      }
     }
 
     return hasError ? FallbackRender : children;

@@ -66,12 +66,6 @@ const nextConfig = {
       })
     );
 
-    config.resolve.alias = config.resolve.alias || {};
-    config.resolve.alias["MediaInfoModule.wasm"] = path.resolve(
-      __dirname,
-      "public/System/mediainfo.js/MediaInfoModule.wasm"
-    );
-
     config.resolve.fallback = config.resolve.fallback || {};
     config.resolve.fallback.module = false;
     config.resolve.fallback.perf_hooks = false;

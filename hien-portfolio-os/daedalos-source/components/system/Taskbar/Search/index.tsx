@@ -1,4 +1,4 @@
-import { basename, extname } from "path";
+import { extname } from "path";
 import { useTheme } from "styled-components";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { m as motion } from "motion/react";
@@ -15,8 +15,6 @@ import {
   Pictures,
   Videos,
 } from "components/system/StartMenu/Sidebar/SidebarIcons";
-import { Games } from "components/system/Taskbar/Search/Icons";
-import StyledFiles from "components/system/Taskbar/Search/StyledFiles";
 import StyledResults from "components/system/Taskbar/Search/StyledResults";
 import StyledSearch from "components/system/Taskbar/Search/StyledSearch";
 import StyledSections from "components/system/Taskbar/Search/StyledSections";
@@ -33,17 +31,14 @@ import { useFileSystem } from "contexts/fileSystem";
 import { useProcesses } from "contexts/process";
 import directory from "contexts/process/directory";
 import { type ProcessArguments } from "contexts/process/types";
-import { useSession } from "contexts/session";
 import Button from "styles/common/Button";
 import Icon from "styles/common/Icon";
 import {
   FOCUSABLE_ELEMENT,
   KEYPRESS_DEBOUNCE_MS,
-  MILLISECONDS_IN_SECOND,
   PICTURES_FOLDER,
   PREVENT_SCROLL,
   SHORTCUT_EXTENSION,
-  TRANSITIONS_IN_SECONDS,
   VIDEOS_FOLDER,
 } from "utils/constants";
 import { haltEvent, label, preloadLibs } from "utils/functions";
@@ -74,9 +69,8 @@ type TabData = {
 
 export const NO_RESULTS = "NO_RESULTS";
 
-const SUGGESTED = ["FileExplorer", "Terminal", "Messenger", "Browser", "Paint"];
+const SUGGESTED = ["FileExplorer", "Terminal", "Browser"];
 
-const GAMES = ["SpaceCadet", "Quake3", "DXBall"];
 
 const METADATA = {
   Documents: {
@@ -104,7 +98,6 @@ const ResultSection = dynamic(
 const Search: FC<SearchProps> = ({ toggleSearch }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const menuRef = useRef<HTMLElement | null>(null);
-  const { recentFiles, updateRecentFiles } = useSession();
   const { lstat, readFile } = useFileSystem();
   const [activeTab, setActiveTab] = useState<TabName>("All");
   const {
@@ -323,68 +316,6 @@ const Search: FC<SearchProps> = ({ toggleSearch }) => {
                       </li>
                     ))}
                   </StyledSuggestions>
-                </figure>
-              </section>
-              <section>
-                {recentFiles.length > 0 && (
-                  <StyledFiles>
-                    <figcaption>Recent</figcaption>
-                    <ol>
-                      {recentFiles.map(([file, pid, title], index) => (
-                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
-                        <li
-                          key={`${file}${pid}`}
-                          onClick={() => {
-                            openApp(pid, { url: file });
-                            if (index !== 0) {
-                              setTimeout(
-                                () => updateRecentFiles(file, pid, title),
-                                TRANSITIONS_IN_SECONDS.TASKBAR_ITEM *
-                                  MILLISECONDS_IN_SECOND
-                              );
-                            }
-                          }}
-                        >
-                          <Icon
-                            displaySize={16}
-                            imgSize={16}
-                            src={directory[pid]?.icon}
-                          />
-                          <h2>{title || basename(file, extname(file))}</h2>
-                        </li>
-                      ))}
-                    </ol>
-                  </StyledFiles>
-                )}
-                <figure className="card">
-                  <figcaption>
-                    <Games />
-                    Games for you
-                  </figcaption>
-                  <ol>
-                    {GAMES.filter(
-                      (game) =>
-                        !(menuWidth < 360 && game === "Quake3") &&
-                        !(menuWidth < 260 && game === "SpaceCadet")
-                    ).map(
-                      (game) =>
-                        directory[game] && (
-                          // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
-                          <li
-                            key={game}
-                            onClick={() => openApp(game)}
-                            title={directory[game].title}
-                          >
-                            <Icon
-                              displaySize={56}
-                              imgSize={96}
-                              src={directory[game].icon}
-                            />
-                            <h4>{directory[game].title}</h4>
-                          </li>
-                        )
-                    )}
-                  </ol>
                 </figure>
               </section>
             </StyledSections>

@@ -3,25 +3,6 @@ import { type Processes } from "contexts/process/types";
 import { FOLDER_ICON, TASKBAR_HEIGHT } from "utils/constants";
 
 const directory: Processes = {
-  BoxedWine: {
-    Component: dynamic(() => import("components/apps/BoxedWine")),
-    allowResizing: false,
-    backgroundColor: "#000",
-    defaultSize: {
-      height: 480,
-      width: 640,
-    },
-    dependantLibs: ["/Program Files/BoxedWine/boxedwine.wasm"],
-    icon: "/System/Icons/boxedwine.webp",
-    libs: [
-      "/Program Files/BoxedWine/browserfs.boxedwine.js",
-      "/Program Files/BoxedWine/boxedwine-shell.js",
-      "/Program Files/BoxedWine/boxedwine.js",
-    ],
-    lockAspectRatio: true,
-    singleton: true,
-    title: "BoxedWine",
-  },
   Browser: {
     Component: dynamic(() => import("components/apps/Browser")),
     backgroundColor: "#FFF",
@@ -32,68 +13,6 @@ const directory: Processes = {
     icon: "/System/Icons/chromium.webp",
     title: "Browser",
   },
-  Chess: {
-    Component: dynamic(() => import("components/apps/Chess")),
-    backgroundColor: "#312E2B",
-    defaultSize: {
-      height: 567,
-      width: 420,
-    },
-    icon: "/System/Icons/chess.webp",
-    libs: ["/Program Files/Chess/chessboard2.min.css"],
-    title: "Chess",
-  },
-  ClassiCube: {
-    Component: dynamic(() => import("components/apps/ClassiCube")),
-    backgroundColor: "#201E20",
-    defaultSize: {
-      height: 420,
-      width: 640,
-    },
-    icon: "/System/Icons/classicube.webp",
-    libs: ["/Program Files/ClassiCube/ClassiCube.js"],
-    title: "ClassiCube",
-  },
-  DXBall: {
-    Component: dynamic(() => import("components/apps/DX-Ball")),
-    backgroundColor: "#000",
-    icon: "/System/Icons/dxball.webp",
-    libs: ["/Program Files/DX-Ball/game.js"],
-    lockAspectRatio: true,
-    singleton: true,
-    title: "DX-Ball",
-  },
-  DevTools: {
-    Component: dynamic(() => import("components/apps/DevTools")),
-    backgroundColor: "#242424",
-    defaultSize: {
-      height: 380,
-      width: 545,
-    },
-    icon: "/System/Icons/eruda.webp",
-    libs: [
-      "/Program Files/Eruda/eruda.js",
-      "/Program Files/Eruda/eruda-monitor.js",
-    ],
-    singleton: true,
-    title: "DevTools",
-  },
-  Emulator: {
-    Component: dynamic(() => import("components/apps/Emulator")),
-    backgroundColor: "#000",
-    defaultSize: {
-      height: 400,
-      width: 600,
-    },
-    dependantLibs: [
-      "/Program Files/EmulatorJs/emu-css.min.css",
-      "/Program Files/EmulatorJs/emulator.min.js",
-    ],
-    icon: "/System/Icons/emulator.webp",
-    libs: ["/Program Files/EmulatorJs/loader.js"],
-    lockAspectRatio: true,
-    title: "Emulator",
-  },
   FileExplorer: {
     Component: dynamic(() => import("components/apps/FileExplorer")),
     backgroundColor: "#202020",
@@ -103,34 +22,6 @@ const directory: Processes = {
     },
     icon: FOLDER_ICON,
     title: "File Explorer",
-  },
-  IRC: {
-    Component: dynamic(() => import("components/apps/IRC")),
-    backgroundColor: "#FFF",
-    defaultSize: {
-      height: 512,
-      width: 704,
-    },
-    icon: "/System/Icons/kiwiirc.webp",
-    libs: ["/Program Files/kiwiirc/index.html"],
-    title: "IRC",
-  },
-  JSDOS: {
-    Component: dynamic(() => import("components/apps/JSDOS")),
-    autoSizing: true,
-    backgroundColor: "#000",
-    defaultSize: {
-      height: 200,
-      width: 320,
-    },
-    dependantLibs: ["/Program Files/js-dos/wdosbox.wasm"],
-    icon: "/System/Icons/jsdos.webp",
-    libs: [
-      "/Program Files/js-dos/emulators.js",
-      "/Program Files/js-dos/emulators-ui.js",
-    ],
-    lockAspectRatio: true,
-    title: "js-dos v7",
   },
   Marked: {
     Component: dynamic(() => import("components/apps/Marked")),
@@ -145,17 +36,6 @@ const directory: Processes = {
       "/Program Files/Marked/purify.min.js",
     ],
     title: "Marked",
-  },
-  Messenger: {
-    Component: dynamic(() => import("components/apps/Messenger")),
-    backgroundColor: "#242526",
-    defaultSize: {
-      height: 500,
-      width: 425,
-    },
-    icon: "/System/Icons/messenger.webp",
-    singleton: true,
-    title: "Messenger",
   },
   MonacoEditor: {
     Component: dynamic(() => import("components/apps/MonacoEditor")),
@@ -172,6 +52,12 @@ const directory: Processes = {
     ],
     icon: "/System/Icons/monaco.webp",
     title: "Monaco Editor",
+  },
+  Moments: {
+    Component: dynamic(() => import("components/apps/Moments")),
+    hasWindow: false,
+    icon: "/System/Icons/pictures.webp",
+    title: "Moments",
   },
   OpenType: {
     Component: dynamic(() => import("components/apps/OpenType")),
@@ -194,20 +80,6 @@ const directory: Processes = {
     icon: "/System/Icons/unknown.webp",
     title: "Open With",
   },
-  PDF: {
-    Component: dynamic(() => import("components/apps/PDF")),
-    backgroundColor: "#525659",
-    icon: "/System/Icons/pdf.webp",
-    libs: ["/Program Files/PDF.js/pdf.js"],
-    title: "PDF",
-  },
-  Paint: {
-    Component: dynamic(() => import("components/apps/Paint")),
-    backgroundColor: "#808080",
-    icon: "/System/Icons/paint.webp",
-    libs: ["/Program Files/jspaint/index.html"],
-    title: "Paint",
-  },
   Photos: {
     Component: dynamic(() => import("components/apps/Photos")),
     backgroundColor: "#222",
@@ -218,6 +90,16 @@ const directory: Processes = {
     hideTitlebarIcon: true,
     icon: "/System/Icons/photos.webp",
     title: "Photos",
+  },
+  Portfolio: {
+    Component: dynamic(() => import("components/apps/Portfolio")),
+    backgroundColor: "#C0C0C0",
+    defaultSize: {
+      height: 600,
+      width: 800,
+    },
+    icon: "/System/Icons/user.webp",
+    title: "Portfolio",
   },
   Properties: {
     Component: dynamic(() => import("components/system/Dialogs/Properties")),
@@ -232,30 +114,6 @@ const directory: Processes = {
     hideMinimizeButton: true,
     icon: "",
     title: "Properties",
-  },
-  Quake3: {
-    Component: dynamic(() => import("components/apps/Quake3")),
-    backgroundColor: "#000",
-    defaultSize: {
-      height: 480,
-      width: 640,
-    },
-    icon: "/System/Icons/quake3.webp",
-    libs: ["/Program Files/Quake3/Quake3Game.js"],
-    lockAspectRatio: true,
-    title: "Quake III Arena",
-  },
-  Ruffle: {
-    Component: dynamic(() => import("components/apps/Ruffle")),
-    backgroundColor: "#000",
-    defaultSize: {
-      height: 400,
-      width: 550,
-    },
-    icon: "/System/Icons/ruffle.webp",
-    libs: ["/Program Files/Ruffle/ruffle.js"],
-    lockAspectRatio: true,
-    title: "Ruffle",
   },
   Run: {
     Component: dynamic(() => import("components/system/Dialogs/Run")),
@@ -285,30 +143,6 @@ const directory: Processes = {
     singleton: true,
     title: "Screen Saver",
   },
-  SpaceCadet: {
-    Component: dynamic(() => import("components/apps/SpaceCadet")),
-    backgroundColor: "#000",
-    defaultSize: {
-      height: 428,
-      width: 600,
-    },
-    dependantLibs: ["/Program Files/SpaceCadet/SpaceCadetPinball.wasm"],
-    icon: "/System/Icons/pinball.webp",
-    libs: ["/Program Files/SpaceCadet/SpaceCadetPinball.js"],
-    lockAspectRatio: true,
-    title: "Space Cadet",
-  },
-  StableDiffusion: {
-    Component: dynamic(() => import("components/apps/StableDiffusion")),
-    backgroundColor: "rgb(235, 251, 247)",
-    defaultSize: {
-      height: 644,
-      width: 538,
-    },
-    icon: "/System/Icons/stablediffusion.webp",
-    singleton: true,
-    title: "Stable Diffusion",
-  },
   Terminal: {
     Component: dynamic(() => import("components/apps/Terminal")),
     backgroundBlur: "8px",
@@ -327,32 +161,6 @@ const directory: Processes = {
     preferProcessIcon: true,
     title: "Terminal",
   },
-  Tic80: {
-    Component: dynamic(() => import("components/apps/Tic80")),
-    backgroundColor: "#1A1C2C",
-    defaultSize: {
-      height: 346,
-      width: 615,
-    },
-    dependantLibs: ["/Program Files/Tic80/tic80.wasm"],
-    icon: "/System/Icons/tic80.webp",
-    libs: ["/Program Files/Tic80/tic80.js"],
-    lockAspectRatio: true,
-    title: "TIC-80 tiny computer",
-  },
-  TinyMCE: {
-    Component: dynamic(() => import("components/apps/TinyMCE")),
-    backgroundColor: "#202124",
-    dependantLibs: [
-      "/Program Files/TinyMCE/themes/silver/theme.min.js",
-      "/Program Files/TinyMCE/models/dom/model.min.js",
-      "/Program Files/TinyMCE/icons/default/icons.min.js",
-      "/Program Files/TinyMCE/skins/ui/oxide/skin.min.css",
-    ],
-    icon: "/System/Icons/tinymce.webp",
-    libs: ["/Program Files/TinyMCE/tinymce.min.js"],
-    title: "TinyMCE",
-  },
   Transfer: {
     Component: dynamic(() => import("components/system/Dialogs/Transfer")),
     allowResizing: false,
@@ -365,58 +173,18 @@ const directory: Processes = {
     icon: "/System/Icons/copying.webp",
     title: "",
   },
-  V86: {
-    Component: dynamic(() => import("components/apps/V86")),
+  UniKey: {
+    Component: dynamic(() => import("components/apps/UniKey")),
     allowResizing: false,
-    autoSizing: true,
-    backgroundColor: "#000",
+    backgroundColor: "#C0C0C0",
     defaultSize: {
-      height: 200,
-      width: 320,
+      height: 380,
+      width: 340,
     },
-    dependantLibs: ["/Program Files/Virtual x86/v86.wasm"],
-    icon: "/System/Icons/v86.webp",
-    libs: ["/Program Files/Virtual x86/libv86.js"],
-    preferProcessIcon: true,
-    title: "Virtual x86",
-  },
-  VideoPlayer: {
-    Component: dynamic(() => import("components/apps/VideoPlayer")),
-    autoSizing: true,
-    backgroundColor: "#000",
-    defaultSize: {
-      height: 390,
-      width: 640,
-    },
-    icon: "/System/Icons/vlc.webp",
-    libs: [
-      "/Program Files/Video.js/video-js.min.css",
-      "/Program Files/Video.js/video.min.js",
-      "/Program Files/Video.js/Youtube.min.js",
-    ],
-    title: "Video Player",
-  },
-  Vim: {
-    Component: dynamic(() => import("components/apps/Vim")),
-    allowResizing: false,
-    backgroundColor: "#222324",
-    defaultSize: {
-      height: 448,
-      width: 595,
-    },
-    icon: "/System/Icons/vim.webp",
-    libs: ["/Program Files/Vim.js/vim.js"],
+    hideMaximizeButton: true,
+    icon: "/System/Icons/unikey.png",
     singleton: true,
-    title: "Vim",
-  },
-  Webamp: {
-    Component: dynamic(() => import("components/apps/Webamp")),
-    allowResizing: false,
-    hasWindow: false,
-    icon: "/System/Icons/webamp.webp",
-    libs: ["/Program Files/Webamp/webamp.bundle.min.js"],
-    singleton: true,
-    title: "Webamp",
+    title: "UniKey NT",
   },
 };
 

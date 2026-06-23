@@ -217,12 +217,27 @@ const useAsyncFs = (): AsyncFSModule => {
             (error) => {
               if (error && (!overwrite || error.code !== "EEXIST")) {
                 if (error.code === "ENOENT" && error.path === "/") {
-                  import("contexts/fileSystem/functions").then(
-                    ({ resetStorage }) =>
-                      resetStorage(rootFs).finally(() =>
-                        window.location.reload()
-                      )
-                  );
+                  try {
+                    const resetKey = "storage_reset_attempts";
+                    const lastReset = sessionStorage.getItem(resetKey);
+                    const now = Date.now();
+                    if (!lastReset || now - Number(lastReset) > 10000) {
+                      sessionStorage.setItem(resetKey, String(now));
+                      import("contexts/fileSystem/functions").then(
+                        ({ resetStorage }) =>
+                          resetStorage(rootFs).finally(() =>
+                            window.location.reload()
+                          )
+                      );
+                    } else {
+                      console.error(
+                        "Storage reset failed, avoiding infinite reload loop.",
+                        error
+                      );
+                    }
+                  } catch {
+                    console.error("Storage reset error");
+                  }
                 }
 
                 reject(error);

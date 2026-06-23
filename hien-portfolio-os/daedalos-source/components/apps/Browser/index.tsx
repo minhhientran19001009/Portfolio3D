@@ -329,13 +329,32 @@ const Browser: FC<ComponentProcessProps> = ({ id }) => {
             setSrcDoc(newSrcDoc);
             prependFileToTitle(newTitle);
           } else {
-            const addressUrl = PROXIES[proxyState]
-              ? await PROXIES[proxyState](processedUrl.href)
-              : processedUrl.href;
+            const proxyFn = PROXIES[proxyState];
 
-            changeIframeWindowLocation(addressUrl, contentWindow);
+            if (proxyState === "ALL_ORIGINS" && proxyFn) {
+              try {
+                const proxyUrl = await proxyFn(processedUrl.href);
+                const response = await fetch(proxyUrl);
+                const html = await response.text();
+                const baseTag = `<base href="${processedUrl.origin}/" target="_blank">`;
+                const injectedHtml = html.replace(
+                  /(<head[^>]*>)/i,
+                  `$1${baseTag}`
+                );
 
-            if (addressUrl.startsWith(GOOGLE_SEARCH_QUERY)) {
+                setSrcDoc(injectedHtml || NOT_FOUND);
+              } catch {
+                setSrcDoc(NOT_FOUND);
+              }
+            } else {
+              const addressUrl = proxyFn
+                ? await proxyFn(processedUrl.href)
+                : processedUrl.href;
+
+              changeIframeWindowLocation(addressUrl, contentWindow);
+            }
+
+            if (processedUrl.href.startsWith(GOOGLE_SEARCH_QUERY)) {
               prependFileToTitle(`${addressInput} - Google Search`);
             } else {
               const { name = initialTitle } =
@@ -350,16 +369,15 @@ const Browser: FC<ComponentProcessProps> = ({ id }) => {
               setIcon(id, "/System/Icons/Favicons/ipfs.webp");
             } else {
               const favicon = new Image();
-              const faviconUrl = `${
-                new URL(addressUrl).origin
-              }${FAVICON_BASE_PATH}`;
+              const faviconUrl = `${processedUrl.origin}${FAVICON_BASE_PATH}`;
 
               favicon.addEventListener(
                 "error",
                 () => {
                   const { icon } =
                     bookmarks?.find(
-                      ({ url: bookmarkUrl }) => bookmarkUrl === addressUrl
+                      ({ url: bookmarkUrl }) =>
+                        bookmarkUrl === processedUrl.href
                     ) || {};
 
                   if (icon) setIcon(id, icon);
@@ -413,7 +431,10 @@ const Browser: FC<ComponentProcessProps> = ({ id }) => {
   }, [id, linkElement]);
 
   return (
-    <StyledBrowser $hasSrcDoc={Boolean(srcDoc)}>
+    <StyledBrowser
+      $hasBookmarks={bookmarks.length > 0}
+      $hasSrcDoc={Boolean(srcDoc)}
+    >
       <nav>
         <div>
           <Button
@@ -466,28 +487,30 @@ const Browser: FC<ComponentProcessProps> = ({ id }) => {
           <Network />
         </Button>
       </nav>
-      <nav>
-        {bookmarks.map(({ name, icon, url: bookmarkUrl }) => (
-          <Button
-            key={name}
-            onClick={({ ctrlKey }) => {
-              if (ctrlKey) {
-                open("Browser", { url: bookmarkUrl });
-              } else {
-                goToLink(bookmarkUrl);
-              }
-            }}
-            {...label(
-              `${name}\n${bookmarkUrl
-                .replace(/^http:\/\//, "")
-                .replace(/\/$/, "")}`
-            )}
-            {...bookmarkMenu}
-          >
-            <Icon alt={name} imgSize={16} src={icon} singleSrc />
-          </Button>
-        ))}
-      </nav>
+      {bookmarks.length > 0 && (
+        <nav>
+          {bookmarks.map(({ name, icon, url: bookmarkUrl }) => (
+            <Button
+              key={name}
+              onClick={({ ctrlKey }) => {
+                if (ctrlKey) {
+                  open("Browser", { url: bookmarkUrl });
+                } else {
+                  goToLink(bookmarkUrl);
+                }
+              }}
+              {...label(
+                `${name}\n${bookmarkUrl
+                  .replace(/^http:\/\//, "")
+                  .replace(/\/$/, "")}`
+              )}
+              {...bookmarkMenu}
+            >
+              <Icon alt={name} imgSize={16} src={icon} singleSrc />
+            </Button>
+          ))}
+        </nav>
+      )}
       <iframe
         ref={iframeRef}
         onLoad={() => {
