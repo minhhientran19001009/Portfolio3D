@@ -8,6 +8,9 @@
     "url": "https://dustinbrett.com"
   },
   "license": "MIT",
+  "engines": {
+    "node": "20.x"
+  },
   "browserslist": [
     "defaults and supports es6 and not ie 11 and >1%"
   ],

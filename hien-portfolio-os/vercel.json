@@ -1,4 +1,6 @@
 {
+  "installCommand": "NODE_OPTIONS=--openssl-legacy-provider yarn install",
+  "buildCommand": "NODE_OPTIONS=--openssl-legacy-provider yarn build",
   "headers": [
     {
       "source": "/(.*)",
