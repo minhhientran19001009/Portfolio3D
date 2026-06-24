@@ -1,0 +1,6 @@
+[InternetShortcut]
+BaseURL=FileExplorer
+Comment=Contains files and folders that you have deleted.
+IconFile=/System/Icons/trash.webp
+Type=System
+URL=/System/Recycle Bin

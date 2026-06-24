@@ -37,3 +37,10 @@ public/Users/Public/**
 !public/Users/Public/Start Menu/Games/Quake III Arena.url
 !public/Users/Public/Start Menu/Games/Space Cadet.url
 !public/Users/Public/Videos
+
+# Unignore user desktop shortcuts, portfolios and wallpapers
+!public/Users/Public/Desktop/*.url
+!public/Users/Public/Documents/Portfolio
+!public/Users/Public/Documents/Portfolio/**
+!public/Users/Public/Pictures/Wallpapers
+!public/Users/Public/Pictures/Wallpapers/**

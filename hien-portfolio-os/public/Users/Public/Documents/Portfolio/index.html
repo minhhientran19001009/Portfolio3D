@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minh Hien Tran - Portfolio</title>
+  <style>
+    /* Reset & Fonts */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+      font-size: 13px;
+      user-select: none;
+    }
+
+    body {
+      background-color: #c0c0c0;
+      /* Match system background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    /* Windows 98 3D Borders */
+    .outset-deep {
+      box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #ffffff,
+        inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+    }
+
+    .inset-deep {
+      box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a,
+        inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+    }
+
+    .outset-thin {
+      box-shadow: inset -1px -1px #808080, inset 1px 1px #ffffff;
+    }
+
+    .inset-thin {
+      box-shadow: inset -1px -1px #ffffff, inset 1px 1px #808080;
+    }
+
+    /* Main Window */
+    .window {
+      background-color: #c0c0c0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Title Bar */
+    .title-bar {
+      background: linear-gradient(90deg, #000080, #1084d0);
+      color: #ffffff;
+      padding: 3px 6px 3px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .title-bar-text {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .title-bar-text img {
+      width: 16px;
+      height: 16px;
+    }
+
+    .title-bar-controls {
+      display: flex;
+      gap: 2px;
+    }
+
+    .win-btn {
+      background-color: #c0c0c0;
+      border: none;
+      width: 16px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .win-btn:active {
+      box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a;
+    }
+
+    /* Menu / Toolbar */
+    .menu-bar {
+      display: flex;
+      padding: 4px 6px;
+      gap: 4px;
+      border-bottom: 1px solid #808080;
+      position: relative;
+    }
+
+    .menu-item {
+      cursor: pointer;
+      position: relative;
+      padding: 2px 8px;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background-color: #000080;
+      color: #ffffff;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #c0c0c0;
+      min-width: 150px;
+      z-index: 1000;
+      padding: 2px;
+      color: #000000;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 6px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      text-align: left;
+    }
+
+    .dropdown-item:hover {
+      background-color: #000080;
+      color: #ffffff;
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background-color: #808080;
+      border-bottom: 1px solid #ffffff;
+      margin: 4px 0;
+    }
+
+    /* Content Area */
+    .window-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      padding: 8px;
+      gap: 8px;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 200px;
+      background-color: #e2e2e2;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 4px;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .nav-header {
+      padding: 6px;
+      font-weight: bold;
+      color: #404040;
+      border-bottom: 1px dashed #808080;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      text-decoration: none;
+      color: #000000;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background-color: #dfdfdf;
+      border: 1px solid #ffffff;
+      box-shadow: inset -1px -1px #808080, inset 1px 1px #ffffff;
+    }
+
+    .nav-item.active {
+      background-color: #000080;
+      color: #ffffff;
+      box-shadow: none;
+      border: 1px dashed #ffffff;
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* Right Main Panel */
+    .main-panel {
+      flex: 1;
+      background-color: #ffffff;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Tab Contents */
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.15s ease-in-out;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Typography & Layout inside contents */
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      color: #000080;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #000080;
+      padding-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #2b2b2b;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 12px;
+      color: #111111;
+      text-align: justify;
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    li {
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .italic {
+      font-style: italic;
+    }
+
+    /* Home Specific Styles */
+    .home-hero {
+      text-align: center;
+      padding: 30px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .home-logo {
+      margin-bottom: 20px;
+      background: radial-gradient(circle, #000080, transparent);
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .home-title {
+      font-size: 26px;
+      font-weight: bold;
+      color: #000080;
+      margin-bottom: 5px;
+      letter-spacing: 0.5px;
+    }
+
+    .home-subtitle {
+      font-size: 16px;
+      color: #555555;
+      margin-bottom: 25px;
+      font-weight: 500;
+    }
+
+    .home-desc {
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: #333333;
+    }
+
+    /* Experience Card */
+    .exp-item {
+      margin-bottom: 20px;
+      padding: 12px;
+      background-color: #f7f7f7;
+      border-left: 4px solid #000080;
+    }
+
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .exp-title {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .exp-company {
+      color: #000080;
+      font-weight: bold;
+    }
+
+    .exp-date {
+      color: #666666;
+      font-size: 12px;
+    }
+
+    /* Projects Grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .project-card {
+      background-color: #f0f0f0;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 150px;
+    }
+
+    .project-name {
+      font-weight: bold;
+      color: #000080;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .project-desc {
+      font-size: 12px;
+      color: #444444;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .project-link {
+      color: #000080;
+      font-weight: bold;
+      text-decoration: none;
+      align-self: flex-start;
+      margin-top: auto;
+      font-size: 11px;
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      padding: 6px 8px;
+      border: none;
+      width: 100%;
+      background-color: #ffffff;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus {
+      background-color: #ffffdd;
+    }
+
+    textarea {
+      height: 120px;
+      resize: none;
+    }
+
+    /* Retro Button */
+    .retro-btn {
+      background-color: #c0c0c0;
+      border: none;
+      padding: 6px 16px;
+      cursor: pointer;
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .retro-btn:active {
+      box-shadow: inset -1px -1px #ffffff, inset 1px 1px #0a0a0a,
+        inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+      padding: 7px 15px 5px 17px;
+    }
+
+    /* Modal / Alert Dialog */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dialog-box {
+      width: 320px;
+      background-color: #c0c0c0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dialog-body {
+      padding: 16px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .dialog-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+    }
+
+    .dialog-text {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #000000;
+    }
+
+    .dialog-footer {
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    /* Skills badges */
+    .skills-section {
+      margin-top: 15px;
+    }
+
+    .skills-group {
+      margin-bottom: 12px;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .skill-tag {
+      background-color: #e5e5e5;
+      padding: 4px 8px;
+      border-radius: 2px;
+      border: 1px solid #b0b0b0;
+      font-size: 11px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Retro Window Container -->
+  <div class="window">
+
+    <!-- Window Menu/Toolbar -->
+    <div class="menu-bar">
+      <div class="menu-item" onclick="toggleDropdown(event, 'file-menu')">
+        Tệp tin
+        <div id="file-menu" class="dropdown-content outset-deep">
+          <div class="dropdown-item" onclick="reloadApp()">Tải lại</div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item" onclick="closeApp()">Đóng</div>
+        </div>
+      </div>
+      <div class="menu-item" onclick="toggleDropdown(event, 'edit-menu')">
+        Chỉnh sửa
+        <div id="edit-menu" class="dropdown-content outset-deep">
+          <div class="dropdown-item" onclick="copyContactLink()">Sao chép Email</div>
+        </div>
+      </div>
+      <div class="menu-item" onclick="toggleDropdown(event, 'view-menu')">
+        Xem
+        <div id="view-menu" class="dropdown-content outset-deep">
+          <div class="dropdown-item" onclick="toggleFullscreen()">Toàn màn hình</div>
+        </div>
+      </div>
+      <div class="menu-item" onclick="toggleDropdown(event, 'help-menu')">
+        Trợ giúp
+        <div id="help-menu" class="dropdown-content outset-deep">
+          <div class="dropdown-item" onclick="showHelp()">Hướng dẫn sử dụng</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Window Workspace -->
+    <div class="window-body">
+      <!-- Left Sidebar (Navigation) -->
+      <div class="sidebar inset-deep">
+        <div class="nav-header">Mục lục</div>
+        <div class="nav-item active" onclick="switchTab(event, 'home')">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+          </svg>
+          Trang chủ
+        </div>
+        <div class="nav-item" onclick="switchTab(event, 'about')">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+          </svg>
+          Giới thiệu
+        </div>
+        <div class="nav-item" onclick="switchTab(event, 'experience')">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+          </svg>
+          Kinh nghiệm
+        </div>
+        <div class="nav-item" onclick="switchTab(event, 'projects')">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z" />
+          </svg>
+          Dự án
+        </div>
+        <div class="nav-item" onclick="switchTab(event, 'contact')">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+          </svg>
+          Liên hệ
+        </div>
+      </div>
+
+      <!-- Right Content Panel -->
+      <div class="main-panel inset-deep">
+
+        <!-- Tab: HOME -->
+        <div id="home" class="tab-content active">
+          <div class="home-hero">
+            <div class="home-logo">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="white">
+                <path
+                  d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" />
+              </svg>
+            </div>
+            <h1 class="home-title">Minh Hien Tran</h1>
+            <div class="home-subtitle">Kỹ sư Phần mềm & Web Developer</div>
+            <p class="home-desc">
+              Chào mừng bạn đến với góc làm việc của tôi! Tôi là một lập trình viên đam mê phát triển các ứng dụng web
+              tối ưu, giao diện tương tác thông minh và trải nghiệm người dùng cao cấp. Khám phá các phần mục lục bên
+              trái để biết thêm chi tiết.
+            </p>
+            <div style="display: flex; gap: 10px;">
+              <button class="retro-btn outset-deep" onclick="document.querySelectorAll('.nav-item')[1].click();">Xem
+                Giới thiệu</button>
+              <button class="retro-btn outset-deep" onclick="document.querySelectorAll('.nav-item')[4].click();">Liên hệ
+                ngay</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: ABOUT -->
+        <div id="about" class="tab-content">
+          <h2>Giới thiệu bản thân</h2>
+          <p>
+            Tôi là <span class="bold">Minh Hien Tran</span>, một kỹ sư phần mềm chuyên về lập trình ứng dụng web. Tôi
+            yêu thích việc xây dựng các kiến trúc hệ thống gọn gàng, hiệu năng cao và giải quyết các vấn đề phức tạp
+            trong quá trình phát triển phần mềm.
+          </p>
+          <p>
+            Tôi hướng đến việc xây dựng những sản phẩm có tính ứng dụng thực tế, không chỉ đáp ứng tốt yêu cầu về mặt kỹ
+            thuật mà còn mang lại trải nghiệm thuận tiện và giá trị thiết thực cho người dùng. Vì vậy, tôi luôn chú
+            trọng nâng cao khả năng tổ chức và tối ưu mã nguồn, áp dụng tư duy lập trình hướng đối tượng để xây dựng hệ
+            thống rõ ràng, dễ mở rộng và bảo trì. Bên cạnh đó, tôi cũng dành thời gian nghiên cứu cách tích hợp các mô
+            hình AI vào sản phẩm nhằm tự động hóa quy trình, nâng cao hiệu quả xử lý và tạo ra những tính năng thông
+            minh hơn. Đồng thời, tôi không ngừng tìm hiểu các công nghệ giao diện và tương tác hiện đại để phát triển
+            những sản phẩm vừa hoạt động ổn định, vừa có tính thẩm mỹ và mang đến trải nghiệm tốt cho người sử dụng.
+          </p>
+
+          <h3 style="margin-top: 20px;">Kỹ năng chuyên môn</h3>
+          <div class="skills-section">
+            <div class="skills-group">
+              <span class="bold">Frontend:</span>
+              <div class="skill-tags">
+                <span class="skill-tag">React.js</span>
+                <span class="skill-tag">Next.js</span>
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">JavaScript (ES6+)</span>
+                <span class="skill-tag">HTML5 / CSS3</span>
+                <span class="skill-tag">TailwindCSS</span>
+              </div>
+            </div>
+            <div class="skills-group">
+              <span class="bold">Backend & Cơ sở dữ liệu:</span>
+              <div class="skill-tags">
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">Express</span>
+                <span class="skill-tag">PHP</span>
+                <span class="skill-tag">Laravel</span>
+                <span class="skill-tag">MySQL</span>
+                <span class="skill-tag">MongoDB</span>
+                <span class="skill-tag">RESTful API</span>
+              </div>
+            </div>
+            <div class="skills-group">
+              <span class="bold">Công cụ & Khác:</span>
+              <div class="skill-tags">
+                <span class="skill-tag">Git / Github</span>
+                <span class="skill-tag">Docker</span>
+                <span class="skill-tag">Vite / Webpack</span>
+                <span class="skill-tag">Linux / Terminal</span>
+                <span class="skill-tag">CI/CD</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 25px;">
+            <button class="retro-btn outset-deep" onclick="downloadResume()">
+              <svg viewBox="0 0 24 24" width="14" height="14" style="fill: currentColor; vertical-align: middle;">
+                <path
+                  d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z" />
+              </svg>
+              Tải Hồ Sơ (Resume.pdf)
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab: EXPERIENCE -->
+        <div id="experience" class="tab-content">
+          <h2>Kinh nghiệm làm việc</h2>
+
+          <div class="exp-item outset-thin">
+            <div class="exp-header">
+              <div>
+                <span class="exp-title">Kỹ sư Phần mềm Senior</span> - <span class="exp-company">TechVina Studio</span>
+              </div>
+              <span class="exp-date">2024 - Hiện tại</span>
+            </div>
+            <ul>
+              <li>Dẫn dắt đội ngũ 5 lập trình viên xây dựng hệ thống quản lý doanh nghiệp lớn bằng React và Node.js.
+              </li>
+              <li>Tối ưu hóa các truy vấn SQL và cấu trúc API, giảm thời gian phản hồi hệ thống xuống dưới 200ms (tăng
+                40% hiệu năng).</li>
+              <li>Áp dụng quy trình CI/CD hoàn chỉnh, giảm thiểu lỗi triển khai và tăng tốc độ release sản phẩm.</li>
+            </ul>
+          </div>
+
+          <div class="exp-item outset-thin">
+            <div class="exp-header">
+              <div>
+                <span class="exp-title">Lập trình viên Full Stack</span> - <span class="exp-company">FPT Software</span>
+              </div>
+              <span class="exp-date">2021 - 2024</span>
+            </div>
+            <ul>
+              <li>Phát triển và bảo trì các hệ thống thương mại điện tử sử dụng Laravel kết hợp React.</li>
+              <li>Thiết kế cơ sở dữ liệu có khả năng mở rộng tốt, hỗ trợ lên đến hàng chục nghìn lượt truy cập đồng
+                thời.</li>
+              <li>Tích hợp các cổng thanh toán phổ biến như VNPay, Momo và các dịch vụ logistics của bên thứ ba.</li>
+            </ul>
+          </div>
+
+          <div class="exp-item outset-thin">
+            <div class="exp-header">
+              <div>
+                <span class="exp-title">Lập trình viên Frontend</span> - <span class="exp-company">VinaWeb
+                  Solution</span>
+              </div>
+              <span class="exp-date">2019 - 2021</span>
+            </div>
+            <ul>
+              <li>Xây dựng giao diện web phản hồi (Responsive Layout) tương thích tốt trên tất cả các trình duyệt hiện
+                đại.</li>
+              <li>Chuyển đổi giao diện thiết kế từ Figma sang mã nguồn HTML/CSS/JS với độ chính xác cao.</li>
+              <li>Tăng cường trải nghiệm tương tác thông qua các thư viện xử lý hoạt ảnh và CSS tối ưu.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Tab: PROJECTS -->
+        <div id="projects" class="tab-content">
+          <h2>Các dự án nổi bật</h2>
+          <p>Dưới đây là một số dự án phần mềm nổi bật mà tôi đã phát triển hoặc tham gia xây dựng:</p>
+
+          <div class="projects-grid">
+            <!-- Project 1 -->
+            <div class="project-card outset-thin">
+              <div>
+                <div class="project-name">Animated IT Portfolio</div>
+                <div class="project-desc">Trang giới thiệu cá nhân sử dụng các công nghệ đồ họa hoạt ảnh chất lượng cao.
+                </div>
+              </div>
+              <a href="#" onclick="showWin98Dialog('Thông tin chi tiết về dự án này sẽ được cập nhật sau!', 'info'); return false;" class="project-link">Xem chi tiết &rarr;</a>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card outset-thin">
+              <div>
+                <div class="project-name">DetectImg AI</div>
+                <div class="project-desc">Ứng dụng web phân tích và nhận dạng đối tượng từ hình ảnh sử dụng mô hình trí
+                  tuệ nhân tạo.</div>
+              </div>
+              <a href="#" onclick="showWin98Dialog('Thông tin chi tiết về dự án này sẽ được cập nhật sau!', 'info'); return false;" class="project-link">Xem chi tiết &rarr;</a>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card outset-thin">
+              <div>
+                <div class="project-name">BusinessMap</div>
+                <div class="project-desc">Hệ thống bản đồ số tương tác phục vụ phân tích dữ liệu phân phối và quản lý
+                  thị trường.</div>
+              </div>
+              <a href="#" onclick="showWin98Dialog('Thông tin chi tiết về dự án này sẽ được cập nhật sau!', 'info'); return false;" class="project-link">Xem chi tiết &rarr;</a>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="project-card outset-thin">
+              <div>
+                <div class="project-name">Moments</div>
+                <div class="project-desc">Mạng xã hội chia sẻ khoảnh khắc và tìm kiếm thông tin hình ảnh tương tác thời gian thực.</div>
+              </div>
+              <a href="#" onclick="showWin98Dialog('Thông tin chi tiết về dự án này sẽ được cập nhật sau!', 'info'); return false;" class="project-link">Xem chi tiết &rarr;</a>
+            </div>
+
+            <!-- Project 5 -->
+            <div class="project-card outset-thin">
+              <div>
+                <div class="project-name">SmartShop</div>
+                <div class="project-desc">Nền tảng thương mại điện tử tích hợp cổng thanh toán trực tuyến và gợi ý sản phẩm thông minh.</div>
+              </div>
+              <a href="#" onclick="showWin98Dialog('Thông tin chi tiết về dự án này sẽ được cập nhật sau!', 'info'); return false;" class="project-link">Xem chi tiết &rarr;</a>
+            </div>
+
+            <!-- Project 6 -->
+            <div class="project-card outset-thin">
+              <div>
+                <div class="project-name">TaskFlow Kanban</div>
+                <div class="project-desc">Ứng dụng quản lý dự án nhóm với bảng Kanban kéo thả cập nhật thời gian thực qua WebSocket.</div>
+              </div>
+              <a href="#" onclick="showWin98Dialog('Thông tin chi tiết về dự án này sẽ được cập nhật sau!', 'info'); return false;" class="project-link">Xem chi tiết &rarr;</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: CONTACT -->
+        <div id="contact" class="tab-content">
+          <h2>Liên hệ với tôi</h2>
+          <p>Nếu bạn có cơ hội hợp tác, câu hỏi hoặc ý kiến đóng góp, xin vui lòng gửi tin nhắn qua biểu mẫu bên dưới:
+          </p>
+
+          <form style="margin-top: 15px;" onsubmit="handleFormSubmit(event)">
+            <div class="form-group">
+              <label for="name">Họ và tên:</label>
+              <input type="text" id="name" class="inset-thin" placeholder="Ví dụ: Nguyễn Văn A">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Thư điện tử (Email):</label>
+              <input type="email" id="email" class="inset-thin" placeholder="Ví dụ: email@domain.com">
+            </div>
+
+            <div class="form-group">
+              <label for="message">Nội dung tin nhắn:</label>
+              <textarea id="message" class="inset-thin" placeholder="Nhập lời nhắn của bạn ở đây..."></textarea>
+            </div>
+
+            <button type="submit" class="retro-btn outset-deep" style="margin-top: 8px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" style="fill: currentColor; vertical-align: middle;">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+              Gửi tin nhắn
+            </button>
+          </form>
+
+          <div style="margin-top: 25px; padding-top: 15px; border-top: 1px dashed #808080;">
+            <p><span class="bold">Email trực tiếp:</span> tranminhhien.cp59@gmail.com</p>
+            <p><span class="bold">Github:</span> </p>
+            <p><span class="bold">Địa chỉ:</span> </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Windows 98 Style Dialog Modal -->
+  <div id="dialog-overlay" class="modal-overlay" onclick="closeDialog()">
+    <div class="dialog-box outset-deep" onclick="event.stopPropagation()">
+      <div class="title-bar">
+        <div class="title-bar-text" id="dialog-title">Thông báo</div>
+        <div class="title-bar-controls">
+          <button class="win-btn outset-thin" onclick="closeDialog()"
+            style="font-weight: bold; color: darkred;">X</button>
+        </div>
+      </div>
+      <div class="dialog-body">
+        <div id="dialog-icon-container">
+          <!-- Icon will be injected here -->
+        </div>
+        <div class="dialog-text" id="dialog-message">Message text.</div>
+      </div>
+      <div class="dialog-footer">
+        <button class="retro-btn outset-deep" onclick="closeDialog()" style="width: 70px;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dropdown menu logic
+    let activeDropdownId = null;
+
+    function toggleDropdown(event, id) {
+      event.stopPropagation();
+      const dropdown = document.getElementById(id);
+      const isAlreadyOpen = dropdown.classList.contains('show');
+
+      closeAllDropdowns();
+
+      if (!isAlreadyOpen) {
+        dropdown.classList.add('show');
+        event.currentTarget.classList.add('active');
+        activeDropdownId = id;
+      }
+    }
+
+    function closeAllDropdowns() {
+      const dropdowns = document.querySelectorAll('.dropdown-content');
+      dropdowns.forEach(d => d.classList.remove('show'));
+
+      const menuItems = document.querySelectorAll('.menu-item');
+      menuItems.forEach(item => item.classList.remove('active'));
+
+      activeDropdownId = null;
+    }
+
+    // Enable hover to open dropdown when another dropdown is active
+    document.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('mouseenter', function (event) {
+        if (activeDropdownId) {
+          const targetDropdownId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+          if (targetDropdownId !== activeDropdownId) {
+            closeAllDropdowns();
+            const dropdown = document.getElementById(targetDropdownId);
+            dropdown.classList.add('show');
+            this.classList.add('active');
+            activeDropdownId = targetDropdownId;
+          }
+        }
+      });
+    });
+
+    document.addEventListener('click', closeAllDropdowns);
+
+    // Dropdown Actions
+    function reloadApp() {
+      window.location.reload();
+    }
+
+    function closeApp() {
+      try {
+        if (window.frameElement) {
+          let parent = window.frameElement.parentElement;
+          while (parent) {
+            const closeBtn = parent.querySelector('button[aria-label="Close"]');
+            if (closeBtn) {
+              closeBtn.click();
+              return;
+            }
+            parent = parent.parentElement;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to close app: ", e);
+      }
+    }
+
+    function copyContactLink() {
+      navigator.clipboard.writeText("tranminhhien.cp59@gmail.com").then(() => {
+        showWin98Dialog("Đã sao chép Email vào Clipboard!", "info");
+      }).catch(() => {
+        showWin98Dialog("Sao chép thất bại. Email là: tranminhhien.cp59@gmail.com", "error");
+      });
+    }
+
+    function toggleFullscreen() {
+      try {
+        if (!window.parent.document.fullscreenElement) {
+          window.parent.document.documentElement.requestFullscreen();
+        } else if (window.parent.document.exitFullscreen) {
+          window.parent.document.exitFullscreen();
+        }
+      } catch (e) {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        } else if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    function showHelp() {
+      showWin98Dialog("Hãy sử dụng menu danh mục bên trái (Trang chủ, Giới thiệu, Kinh nghiệm, Dự án, Liên hệ) để tìm hiểu thông tin về tôi.", "info");
+    }
+
+    function showAbout() {
+      showWin98Dialog("Minh Hien Tran - Showcase Explorer v1.0\nBản quyền © 2026 Minh Hien Tran. Bảo lưu mọi quyền.", "info");
+    }
+
+    // Tab switching logic
+    function switchTab(event, tabId) {
+      // Deactivate all nav items
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => item.classList.remove('active'));
+
+      // Deactivate all tab contents
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => content.classList.remove('active'));
+
+      // Activate clicked item and target tab
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    // Custom Alert Dialog Functions
+    function showWin98Dialog(message, type = 'info') {
+      const overlay = document.getElementById('dialog-overlay');
+      const title = document.getElementById('dialog-title');
+      const text = document.getElementById('dialog-message');
+      const iconContainer = document.getElementById('dialog-icon-container');
+
+      text.innerText = message;
+
+      let iconSvg = '';
+      if (type === 'error') {
+        title.innerText = 'Lỗi Hệ Thống';
+        iconSvg = `<svg viewBox="0 0 24 24" width="32" height="32" fill="#d32f2f">
+          <path d="M12 2C6.47 2 2 6.47 2 12s6.47 10 10 10 10-6.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+        </svg>`;
+      } else {
+        title.innerText = 'Thông báo';
+        iconSvg = `<svg viewBox="0 0 24 24" width="32" height="32" fill="#1976d2">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+        </svg>`;
+      }
+      iconContainer.innerHTML = iconSvg;
+      overlay.style.display = 'flex';
+    }
+
+    function closeDialog() {
+      document.getElementById('dialog-overlay').style.display = 'none';
+    }
+
+    // Form Submission Handling
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      if (!name || !email || !message) {
+        showWin98Dialog('Vui lòng nhập đầy đủ các trường thông tin trước khi gửi!', 'error');
+        return;
+      }
+
+      // Simulate success
+      showWin98Dialog('Tin nhắn của bạn đã được gửi thành công! Tôi sẽ liên hệ lại với bạn sớm nhất có thể.', 'success');
+
+      // Clear form
+      document.getElementById('name').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('message').value = '';
+    }
+
+    // Mock Resume Download
+    function downloadResume() {
+      showWin98Dialog('Đang tải tệp Hồ sơ năng lực (Minh_Hien_Tran_CV.pdf) xuống máy tính của bạn...', 'info');
+    }
+  </script>
+</body>
+
+</html>
