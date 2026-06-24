@@ -65,7 +65,6 @@ const useFolderContextMenu = (
     exists,
     mapFs,
     pasteList = {},
-    readFile,
     rootFs,
     writeFile,
     updateFolder,
