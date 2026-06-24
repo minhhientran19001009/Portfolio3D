@@ -574,8 +574,6 @@ const useFolderContextMenu = (
       }),
     [
       addToFolder,
-      canCapture,
-      captureScreen,
       closeEffect,
       contextMenu,
       exists,
