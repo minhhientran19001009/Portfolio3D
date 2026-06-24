@@ -2,6 +2,12 @@
   "cleanUrls": false,
   "installCommand": "NODE_OPTIONS=--openssl-legacy-provider yarn install",
   "buildCommand": "NODE_OPTIONS=--openssl-legacy-provider yarn build",
+  "rewrites": [
+    {
+      "source": "/Users/Public/Documents/Portfolio/index.html",
+      "destination": "/Users/Public/Documents/Portfolio"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
