@@ -68,6 +68,27 @@ const translateLocation = (loc: string): string => {
   return loc;
 };
 
+// Format Time (HH:MM:SS)
+const formatTime = (date: Date): string =>
+  date.toLocaleTimeString("en-US", { hour12: false });
+
+// Format Date (Vietnamese style)
+const formatDate = (date: Date): string =>
+  new Intl.DateTimeFormat("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    weekday: "long",
+    year: "numeric",
+  }).format(date);
+
+// Format Uptime (Hh Mm Ss)
+const formatUptime = (seconds: number): string => {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `Uptime: ${h}h ${m}m ${s}s`;
+};
+
 const DesktopWidget: FC = () => {
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState<Date>(new Date());
@@ -197,28 +218,8 @@ const DesktopWidget: FC = () => {
     };
   }, [currentHour, currentDay, currentMonth, currentYear]);
 
+  // eslint-disable-next-line unicorn/no-null
   if (!mounted) return null;
-
-  // Format Time (HH:MM:SS)
-  const formatTime = (date: Date): string =>
-    date.toLocaleTimeString("en-US", { hour12: false });
-
-  // Format Date (Vietnamese style)
-  const formatDate = (date: Date): string =>
-    new Intl.DateTimeFormat("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      weekday: "long",
-      year: "numeric",
-    }).format(date);
-
-  // Format Uptime (Hh Mm Ss)
-  const formatUptime = (seconds: number): string => {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `Uptime: ${h}h ${m}m ${s}s`;
-  };
 
   return (
     <StyledWidget>
@@ -231,7 +232,7 @@ const DesktopWidget: FC = () => {
       <div className="widget-section">
         <div className="time-display">{formatTime(time)}</div>
         <div className="date-display">{formatDate(time)}</div>
-        <div className="uptime-display" style={{ marginTop: "6px", paddingTop: "4px", borderTop: "1px dashed rgba(255, 255, 255, 0.15)" }}>{formatUptime(uptime)}</div>
+        <div className="uptime-display" style={{ borderTop: "1px dashed rgba(255, 255, 255, 0.15)", marginTop: "6px", paddingTop: "4px" }}>{formatUptime(uptime)}</div>
       </div>
 
       {/* Weather Section */}

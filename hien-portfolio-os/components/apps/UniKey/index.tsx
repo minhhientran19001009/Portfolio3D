@@ -1,70 +1,73 @@
-import { memo, useEffect, useState } from "react";
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
+import { memo, useCallback, useEffect, useState } from "react";
 import { useProcesses } from "contexts/process";
 import { type ComponentProcessProps } from "components/system/Apps/RenderComponent";
 import StyledUniKey from "components/apps/UniKey/StyledUniKey";
 
+type UniKeyMethod = "telex" | "vni" | "off";
+type UniKeyCharset = "unicode" | "tcvn3" | "vni";
+
 const UniKey: FC<ComponentProcessProps> = ({ id }) => {
   const { close } = useProcesses();
-  const [method, setMethod] = useState<"telex" | "vni" | "off">("telex");
-  const [charset, setCharset] = useState<"unicode" | "tcvn3" | "vni">("unicode");
+  const [method, setMethod] = useState<UniKeyMethod>("telex");
+  const [charset, setCharset] = useState<UniKeyCharset>("unicode");
   const [enabled, setEnabled] = useState(true);
   const [showAbout, setShowAbout] = useState(false);
 
   // Sync state from window.unikey
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (!window.unikey) {
-        window.unikey = {
-          charset: "unicode",
-          enabled: true,
-          method: "telex",
-        };
-      }
-      setMethod(window.unikey.method);
-      setCharset(window.unikey.charset);
-      setEnabled(window.unikey.enabled);
+    if (typeof window === "undefined") return () => { /* no-op */ };
 
-      const handleUpdate = (): void => {
-        if (window.unikey) {
-          setMethod(window.unikey.method);
-          setCharset(window.unikey.charset);
-          setEnabled(window.unikey.enabled);
-        }
+    if (!window.unikey) {
+      window.unikey = {
+        charset: "unicode",
+        enabled: true,
+        method: "telex",
       };
-
-      window.addEventListener("unikey-change", handleUpdate);
-      return () => window.removeEventListener("unikey-change", handleUpdate);
     }
-    return undefined;
+    setMethod(window.unikey.method);
+    setCharset(window.unikey.charset);
+    setEnabled(window.unikey.enabled);
+
+    const handleUpdate = (): void => {
+      if (window.unikey) {
+        setMethod(window.unikey.method);
+        setCharset(window.unikey.charset);
+        setEnabled(window.unikey.enabled);
+      }
+    };
+
+    window.addEventListener("unikey-change", handleUpdate);
+    return () => window.removeEventListener("unikey-change", handleUpdate);
   }, []);
 
-  const updateUniKey = (newFields: Partial<NonNullable<typeof window.unikey>>): void => {
+  const updateUniKey = useCallback((newFields: Partial<NonNullable<typeof window.unikey>>): void => {
     if (typeof window !== "undefined") {
       window.unikey = {
         charset: window.unikey?.charset || "unicode",
-        enabled: window.unikey?.enabled !== undefined ? window.unikey.enabled : true,
+        enabled: window.unikey?.enabled === undefined ? true : window.unikey.enabled,
         method: window.unikey?.method || "telex",
         ...newFields,
       };
       window.dispatchEvent(new CustomEvent("unikey-change"));
     }
-  };
+  }, []);
 
-  const handleMethodChange = (newMethod: "telex" | "vni" | "off"): void => {
-    updateUniKey({ method: newMethod, enabled: newMethod !== "off" });
-  };
+  const handleMethodChange = useCallback((newMethod: "telex" | "vni" | "off"): void => {
+    updateUniKey({ enabled: newMethod !== "off", method: newMethod });
+  }, [updateUniKey]);
 
-  const handleCharsetChange = (newCharset: "unicode" | "tcvn3" | "vni"): void => {
+  const handleCharsetChange = useCallback((newCharset: "unicode" | "tcvn3" | "vni"): void => {
     updateUniKey({ charset: newCharset });
-  };
+  }, [updateUniKey]);
 
-  const resetToDefault = (): void => {
+  const resetToDefault = useCallback(() => {
     updateUniKey({
       charset: "unicode",
       enabled: true,
       method: "telex",
     });
-  };
+  }, [updateUniKey]);
 
   return (
     <StyledUniKey>
@@ -75,7 +78,7 @@ const UniKey: FC<ComponentProcessProps> = ({ id }) => {
             <label htmlFor="charset-select">Bảng mã</label>
             <select
               id="charset-select"
-              onChange={(e) => handleCharsetChange(e.target.value as any)}
+              onChange={(e) => handleCharsetChange(e.target.value as "unicode" | "tcvn3" | "vni")}
               value={charset}
             >
               <option value="unicode">Unicode dựng sẵn</option>
@@ -88,7 +91,7 @@ const UniKey: FC<ComponentProcessProps> = ({ id }) => {
             <label htmlFor="method-select">Kiểu gõ</label>
             <select
               id="method-select"
-              onChange={(e) => handleMethodChange(e.target.value as any)}
+              onChange={(e) => handleMethodChange(e.target.value as "off" | "telex" | "vni")}
               value={enabled ? method : "off"}
             >
               <option value="telex">Telex</option>
@@ -132,15 +135,15 @@ const UniKey: FC<ComponentProcessProps> = ({ id }) => {
         <span className="group-title">Tùy chọn gõ</span>
         <div className="options-grid">
           <label className="checkbox-label">
-            <input defaultChecked type="checkbox" />
+            <input type="checkbox" defaultChecked />
             <span>Cho phép gõ tự do</span>
           </label>
           <label className="checkbox-label">
-            <input defaultChecked type="checkbox" />
+            <input type="checkbox" defaultChecked />
             <span>Kiểm tra chính tả</span>
           </label>
           <label className="checkbox-label">
-            <input defaultChecked type="checkbox" />
+            <input type="checkbox" defaultChecked />
             <span>Tự khôi phục phím sai</span>
           </label>
           <label className="checkbox-label">
@@ -155,18 +158,18 @@ const UniKey: FC<ComponentProcessProps> = ({ id }) => {
         <span className="group-title">Hệ thống</span>
         <div className="options-grid">
           <label className="checkbox-label">
-            <input defaultChecked type="checkbox" />
+            <input type="checkbox" defaultChecked />
             <span>Khởi động cùng Windows</span>
           </label>
           <label className="checkbox-label">
-            <input defaultChecked type="checkbox" />
+            <input type="checkbox" defaultChecked />
             <span>Bật hội thoại khi khởi động</span>
           </label>
           <label className="checkbox-label">
-            <input defaultChecked type="checkbox" style={{ accentColor: "#000" }} />
+            <input style={{ accentColor: "#000" }} type="checkbox" defaultChecked />
             <span>Hiện biểu tượng ở khay hệ thống</span>
           </label>
-          <label className="checkbox-label">
+          <div className="checkbox-label">
             <button
               className="win98-button"
               onClick={resetToDefault}
@@ -175,7 +178,7 @@ const UniKey: FC<ComponentProcessProps> = ({ id }) => {
             >
               Mặc định
             </button>
-          </label>
+          </div>
         </div>
       </div>
 

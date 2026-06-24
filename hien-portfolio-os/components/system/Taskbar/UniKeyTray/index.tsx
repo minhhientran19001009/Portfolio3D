@@ -1,14 +1,14 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useProcesses } from "contexts/process";
 import { FOCUSABLE_ELEMENT } from "utils/constants";
 
 type UniKeyTrayProps = {
-  hasAI: boolean;
   clockWidth: number;
+  hasAI: boolean;
 };
 
-const StyledUniKeyTray = styled.div<{ $hasAI: boolean; $clockWidth: number }>`
+const StyledUniKeyTray = styled.div<{ $clockWidth: number; $hasAI: boolean }>`
   align-items: center;
   cursor: default;
   display: flex;
@@ -52,26 +52,25 @@ const UniKeyTray: FC<UniKeyTrayProps> = ({ hasAI, clockWidth }) => {
   const [method, setMethod] = useState<"telex" | "vni" | "off">("telex");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window === "undefined") return () => { /* no-op */ };
+
+    if (window.unikey) {
+      setEnabled(window.unikey.enabled);
+      setMethod(window.unikey.method);
+    }
+
+    const handleUpdate = (): void => {
       if (window.unikey) {
         setEnabled(window.unikey.enabled);
         setMethod(window.unikey.method);
       }
+    };
 
-      const handleUpdate = (): void => {
-        if (window.unikey) {
-          setEnabled(window.unikey.enabled);
-          setMethod(window.unikey.method);
-        }
-      };
-
-      window.addEventListener("unikey-change", handleUpdate);
-      return () => window.removeEventListener("unikey-change", handleUpdate);
-    }
-    return undefined;
+    window.addEventListener("unikey-change", handleUpdate);
+    return () => window.removeEventListener("unikey-change", handleUpdate);
   }, []);
 
-  const toggleUniKey = (e: React.MouseEvent): void => {
+  const toggleUniKey = useCallback((e: React.MouseEvent): void => {
     e.preventDefault();
     if (typeof window !== "undefined" && window.unikey) {
       const newEnabled = !window.unikey.enabled;
@@ -82,12 +81,12 @@ const UniKeyTray: FC<UniKeyTrayProps> = ({ hasAI, clockWidth }) => {
       };
       window.dispatchEvent(new CustomEvent("unikey-change"));
     }
-  };
+  }, []);
 
-  const handleDoubleClick = (e: React.MouseEvent): void => {
+  const handleDoubleClick = useCallback((e: React.MouseEvent): void => {
     e.preventDefault();
     open("UniKey");
-  };
+  }, [open]);
 
   const isVMode = enabled && method !== "off";
 
