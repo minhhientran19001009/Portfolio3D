@@ -477,16 +477,7 @@ const useFolderContextMenu = (
                     toggle: closeEffect === effectName,
                   })),
                 },
-                ...(canCapture
-                  ? [
-                      {
-                        action: captureScreen,
-                        label: currentMediaStream?.active
-                          ? "Stop screen capture"
-                          : "Capture screen",
-                      },
-                    ]
-                  : []),
+
               ]
             : []),
           ...(isReadOnly
