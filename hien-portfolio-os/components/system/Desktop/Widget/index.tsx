@@ -71,8 +71,6 @@ const translateLocation = (loc: string): string => {
 const DesktopWidget: FC = () => {
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState<Date>(new Date());
-  const [cpuUsage, setCpuUsage] = useState<number>(12);
-  const [ramUsage, setRamUsage] = useState<number>(1.42);
   const [uptime, setUptime] = useState<number>(0);
   const [location, setLocation] = useState<string>("Hà Nội, VN");
   const [weather, setWeather] = useState({
@@ -100,19 +98,6 @@ const DesktopWidget: FC = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
-
-  // System Stats ticks (every 2.5s)
-  useEffect(() => {
-    const statsTimer = setInterval(() => {
-      // Simulate CPU usage fluctuating between 5% and 28%
-      setCpuUsage(Math.floor(Math.random() * 23) + 5);
-
-      // Simulate RAM usage fluctuating between 1.35 GB and 1.55 GB
-      setRamUsage(Number((1.35 + Math.random() * 0.2).toFixed(2)));
-    }, 2500);
-
-    return () => clearInterval(statsTimer);
   }, []);
 
   // Weather update fetching from wttr.in with local deterministic fallback
@@ -235,8 +220,6 @@ const DesktopWidget: FC = () => {
     return `Uptime: ${h}h ${m}m ${s}s`;
   };
 
-  const ramPercentage = Math.round((ramUsage / 4) * 100);
-
   return (
     <StyledWidget>
       <div className="widget-header">
@@ -248,6 +231,7 @@ const DesktopWidget: FC = () => {
       <div className="widget-section">
         <div className="time-display">{formatTime(time)}</div>
         <div className="date-display">{formatDate(time)}</div>
+        <div className="uptime-display" style={{ marginTop: "6px", paddingTop: "4px", borderTop: "1px dashed rgba(255, 255, 255, 0.15)" }}>{formatUptime(uptime)}</div>
       </div>
 
       {/* Weather Section */}
@@ -266,31 +250,6 @@ const DesktopWidget: FC = () => {
           <span>Độ ẩm: {weather.humidity}%</span>
           <span>Sức gió: {weather.wind} km/h</span>
         </div>
-      </div>
-
-      {/* Resource Monitor Section */}
-      <div className="widget-section">
-        <div className="stat-row">
-          <div className="stat-label">
-            <span>CPU Usage</span>
-            <span className="val">{cpuUsage}%</span>
-          </div>
-          <div className="progress-bar" title={`CPU Load: ${cpuUsage}%`}>
-            <div className="progress-fill" style={{ width: `${cpuUsage}%` }} />
-          </div>
-        </div>
-
-        <div className="stat-row">
-          <div className="stat-label">
-            <span>RAM Usage</span>
-            <span className="val">{ramUsage} GB / 4.00 GB</span>
-          </div>
-          <div className="progress-bar" title={`RAM Load: ${ramPercentage}%`}>
-            <div className="progress-fill" style={{ width: `${ramPercentage}%` }} />
-          </div>
-        </div>
-
-        <div className="uptime-display">{formatUptime(uptime)}</div>
       </div>
     </StyledWidget>
   );

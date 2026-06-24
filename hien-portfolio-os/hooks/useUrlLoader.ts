@@ -65,6 +65,8 @@ const useUrlLoader = (): void => {
           // Ignore error getting url
         }
       }
+    } else {
+      open("Portfolio", { url: "/Users/Public/Documents/Portfolio/index.html" });
     }
   }, [exists, fs, open, stat]);
 };

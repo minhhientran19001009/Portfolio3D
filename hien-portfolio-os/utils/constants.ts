@@ -24,7 +24,7 @@ export const DEFAULT_CLOSE_EFFECT = "None";
 
 export const DEFAULT_THEME: ThemeName = "defaultTheme";
 
-export const DEFAULT_WALLPAPER = "/Users/Public/Pictures/Wallpapers/Img1.png";
+export const DEFAULT_WALLPAPER = "/Users/Public/Pictures/Wallpapers/Img2.png";
 
 export const DEFAULT_WALLPAPER_FIT: WallpaperFit = "fill";
 
