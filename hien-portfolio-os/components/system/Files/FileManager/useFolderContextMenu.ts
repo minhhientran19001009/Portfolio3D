@@ -28,14 +28,9 @@ import {
   PROCESS_DELIMITER,
 } from "utils/constants";
 import {
-  blobToBuffer,
-  bufferToBlob,
-  generatePrettyTimestamp,
   getExtension,
   isFileSystemMappingSupported,
-  isFirefox,
   isGlobalMusicVisualizationRunning,
-  isSafari,
   stopGlobalMusicVisualization,
   updateIconPositions,
 } from "utils/functions";
@@ -52,12 +47,7 @@ const updateSortBy =
     sortBy === value ? !isAscending : defaultIsAscending,
   ];
 
-const CAPTURE_FPS = 30;
-const MIME_TYPE_VIDEO_WEBM = "video/webm";
-const MIME_TYPE_VIDEO_MP4 = "video/mp4";
 
-let currentMediaStream: MediaStream | undefined;
-let currentMediaRecorder: MediaRecorder | undefined;
 
 const useFolderContextMenu = (
   url: string,
@@ -109,112 +99,7 @@ const useFolderContextMenu = (
     },
     [setIconPositions, setSortBy, url]
   );
-  const canCapture = useMemo(
-    () =>
-      isDesktop &&
-      typeof window !== "undefined" &&
-      typeof navigator?.mediaDevices?.getDisplayMedia === "function" &&
-      (window?.MediaRecorder?.isTypeSupported(MIME_TYPE_VIDEO_WEBM) ||
-        window?.MediaRecorder?.isTypeSupported(MIME_TYPE_VIDEO_MP4)),
-    [isDesktop]
-  );
-  const captureScreen = useCallback(async () => {
-    if (currentMediaRecorder && currentMediaStream) {
-      const { active: wasActive } = currentMediaStream;
 
-      try {
-        currentMediaRecorder.requestData();
-        currentMediaStream.getTracks().forEach((track) => track.stop());
-      } catch {
-        // Ignore errors with MediaRecorder
-      }
-
-      currentMediaRecorder = undefined;
-      currentMediaStream = undefined;
-
-      if (wasActive) return;
-    }
-
-    const isFirefoxOrSafari = isFirefox() || isSafari();
-    const displayMediaOptions: DisplayMediaStreamOptions &
-      MediaStreamConstraints = {
-      video: {
-        frameRate: CAPTURE_FPS,
-      },
-      // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia#browser_compatibility
-      ...(!isFirefoxOrSafari && {
-        preferCurrentTab: true,
-        selfBrowserSurface: "include",
-        surfaceSwitching: "include",
-        systemAudio: "include",
-      }),
-    };
-
-    currentMediaStream =
-      await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
-
-    const [currentVideoTrack] = currentMediaStream.getVideoTracks();
-    const { height, width } = currentVideoTrack.getSettings();
-    const supportsWebm = MediaRecorder.isTypeSupported(MIME_TYPE_VIDEO_WEBM);
-    const fileName = `Screen Capture ${generatePrettyTimestamp()}.${
-      supportsWebm ? "webm" : "mp4"
-    }`;
-
-    currentMediaRecorder = new MediaRecorder(currentMediaStream, {
-      bitsPerSecond: height && width ? height * width * CAPTURE_FPS : undefined,
-      mimeType: supportsWebm ? MIME_TYPE_VIDEO_WEBM : MIME_TYPE_VIDEO_MP4,
-    });
-
-    const capturePath = join(DESKTOP_PATH, fileName);
-    const startTime = Date.now();
-    let hasCapturedData = false;
-
-    currentMediaRecorder.start();
-    currentMediaRecorder.addEventListener("dataavailable", async (event) => {
-      const { data } = event;
-
-      if (data?.size) {
-        const bufferData = await blobToBuffer(data);
-
-        await writeFile(
-          capturePath,
-          hasCapturedData
-            ? Buffer.concat([await readFile(capturePath), bufferData])
-            : bufferData,
-          hasCapturedData
-        );
-
-        if (
-          supportsWebm &&
-          !isFirefoxOrSafari &&
-          (!currentMediaRecorder || currentMediaRecorder.state === "inactive")
-        ) {
-          const [{ default: fixWebmDuration }, capturedBuffer] =
-            await Promise.all([
-              import("fix-webm-duration"),
-              readFile(capturePath),
-            ]);
-
-          fixWebmDuration(
-            bufferToBlob(capturedBuffer),
-            Date.now() - startTime,
-            async (capturedFile) => {
-              await writeFile(
-                capturePath,
-                await blobToBuffer(capturedFile),
-                true
-              );
-              updateFolder(DESKTOP_PATH, fileName);
-            }
-          );
-        } else {
-          updateFolder(DESKTOP_PATH, fileName);
-        }
-
-        hasCapturedData = true;
-      }
-    });
-  }, [readFile, updateFolder, writeFile]);
   const hasWebGPU = useWebGPUCheck();
   const processesRef = useProcessesRef();
   const updateDesktopIconPositions = useCallback(
